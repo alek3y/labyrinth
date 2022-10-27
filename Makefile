@@ -14,5 +14,8 @@ dirs:
 $(BUILD): $(SRC)
 	$(CC) $(CFLAGS) $^ -o $@
 
+docs:
+	doxygen
+
 clean:
-	-rm -r $$(dirname "$(BUILD)")
+	-rm -r $$(dirname "$(BUILD)") docs
