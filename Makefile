@@ -2,20 +2,25 @@ CC = cc
 CFLAGS = -std=c99 -pedantic -Wall -Wextra -Wshadow
 
 SRC = $(wildcard src/*.c)
-BUILD = bin/game
+BIN = bin/game
 
-all: dirs $(BUILD)
+BINDIR = $(shell dirname "$(BIN)")
 
-dirs:
-	mkdir -p $$(dirname "$(BUILD)")
+# Lista dei target non-file
+.PHONY: all docs clean
 
-# Automatic variable $@ is the target,
-# and $^ are the prerequisites (.c files)
-$(BUILD): $(SRC)
+all: $(BINDIR) $(BIN)
+
+$(BINDIR):
+	mkdir -p $(BINDIR)
+
+# La variabile automatica $@ è il target,
+# e $^ sono i prerequisiti (file .c)
+$(BIN): $(SRC)
 	$(CC) $(CFLAGS) $^ -o $@
 
 docs:
 	doxygen
 
 clean:
-	-rm -r $$(dirname "$(BUILD)") docs
+	-rm -r $(BINDIR) docs
