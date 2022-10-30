@@ -33,23 +33,21 @@
 
 #include <stdio.h>
 #include "map.h"
+#include "player.h"
+#include "config.h"
 
 //! @brief Entry del programma contenente il loop di gioco principale.
 //! @return Valori non-zero se c'è stato un errore durante l'inizializzazione.
 int main(void) {
-	FILE *level = fopen("res/levels/0.txt", "r");
-	Map map = map_load(level);
-	fclose(level);
-
-	for (size_t y = 0; y < map.rows; y++) {
-		printf("|");
-		for (size_t x = 0; x < map.columns; x++) {
-			printf("%c", *map_at(map, y, x));
-		}
-		printf("|\n");
+	FILE *level = fopen(PATH_LEVELS "/0.txt", "r");	// TODO: Supporto per più livelli
+	if (level == NULL) {
+		return 1;
 	}
 
-	printf("%lu %lu\n", map.rows, map.columns);
+	Map map = map_load(level);
+	Player player = player_retrieve(SYMBOL_PLAYER, map);
+	map_print(map);
 
 	map_free(&map);
+	fclose(level);
 }

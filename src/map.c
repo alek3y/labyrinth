@@ -5,6 +5,16 @@
 #include <assert.h>
 #include "map.h"
 
+void map_print(Map map) {
+	MAP_ITERATE(map, i, x, y) {
+		printf("%c", map.map[i]);
+
+		if (x + 1 >= map.columns) {
+			printf("\n");
+		}
+	}
+}
+
 Map map_load(FILE *level) {
 	assert(level != NULL);
 
