@@ -32,6 +32,8 @@
 //! @brief Logica di gioco principale.
 
 #include <stdio.h>
+#include <stdbool.h>
+#include "util.h"
 #include "map.h"
 #include "player.h"
 #include "config.h"
@@ -46,7 +48,13 @@ int main(void) {
 
 	Map map = map_load(level);
 	Player player = player_retrieve(SYMBOL_PLAYER, map);
-	map_print(map);
+
+	while (true) {
+		printf("\r");
+		map_print(map);
+		msleep(1000);
+		cursor_move_rows(-map.rows);
+	}
 
 	map_free(&map);
 	fclose(level);
