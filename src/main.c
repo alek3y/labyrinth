@@ -1,4 +1,88 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+#include <assert.h>
+
+typedef struct {
+	char *map;
+	size_t rows, columns;
+} Map;
+
+Map map_load(FILE *level) {
+	assert(level != NULL);
+
+	Map map = {.rows = 0, .columns = 0};
+	long start = ftell(level);
+
+	size_t columns = 0;
+	while (true) {
+		char cell = fgetc(level);
+		if (cell == '\n' || cell == EOF) {
+			if (columns == 0) {
+				break;	// Ferma il parsing a "\n\n" o {'\n', EOF}
+			}
+
+			if (columns > map.columns) {
+				map.columns = columns;
+			}
+			columns = 0;
+
+			map.rows++;
+		} else {
+			columns++;
+		}
+	}
+
+	fseek(level, start, SEEK_SET);
+	map.map = malloc(map.rows * map.columns);
+	for (size_t i = 0; i < map.rows * map.columns; ) {
+		char cell = fgetc(level);
+		if (cell == '\n' || cell == EOF) {
+
+			// Riempi le colonne mancanti con spazi
+			if (i % map.columns != 0) {
+				size_t padding = map.columns - (i % map.columns);
+				memset(&map.map[i], ' ', padding);
+				i += padding;
+			}
+		} else {
+			map.map[i++] = cell;
+		}
+	}
+
+	fseek(level, 2, SEEK_CUR);	// Salta il "\n\n" se presente
+	return map;
+}
+
+void map_free(Map *map) {
+	assert(map->map != NULL);
+
+	free(map->map);
+	memset(map, 0, sizeof(*map));
+}
+
+char *map_at(Map map, size_t row, size_t column) {
+	assert(column < map.columns);
+	assert(row < map.rows);
+
+	return &map.map[row * map.columns + column];
+}
 
 int main(void) {
+	FILE *level = fopen("res/levels/0.txt", "r");
+	Map map = map_load(level);
+	fclose(level);
+
+	for (size_t y = 0; y < map.rows; y++) {
+		printf("|");
+		for (size_t x = 0; x < map.columns; x++) {
+			printf("%c", *map_at(map, y, x));
+		}
+		printf("|\n");
+	}
+
+	printf("%lu %lu\n", map.rows, map.columns);
+
+	map_free(&map);
 }
