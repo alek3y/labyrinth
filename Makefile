@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -std=c99 -pedantic -Wall -Wextra -Wshadow
+CFLAGS = -g -std=c99 -pedantic -Wall -Wextra -Wshadow
 
 SRC = $(wildcard src/*.c)
 BIN = bin/game
