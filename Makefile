@@ -1,4 +1,4 @@
-CC = cc
+CC = gcc
 CFLAGS = -g -std=c99 -pedantic -Wall -Wextra -Wshadow
 CFLAGS += -Wno-unused-but-set-variable
 
