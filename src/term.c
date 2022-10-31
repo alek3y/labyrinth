@@ -73,8 +73,8 @@ char term_getch(void) {
 	if (tcgetattr(STDIN_FILENO, &original) == 0) {
 		new = original;
 
-		// Disabilita la modalità canonica (vedi termios(3))
-		new.c_lflag &= ~ICANON;
+		// Disabilita la modalità canonica e l'echo dell'input (vedi termios(3))
+		new.c_lflag &= ~(ICANON | ECHO);
 		tcsetattr(STDIN_FILENO, TCSANOW, &new);
 
 		char byte = fgetc(stdin);
