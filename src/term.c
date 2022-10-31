@@ -53,12 +53,12 @@ unsigned int term_width(void) {
 #ifdef _WIN32
 	HANDLE output = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	CONSOLE_SCREEN_BUFFER_INFO info;
+	CONSOLE_SCREEN_BUFFER_INFO info = {0};
 	GetConsoleScreenBufferInfo(output, &info);
 
 	return info.srWindow.Right - info.srWindow.Left + 1;
 #else
-	struct winsize info;
+	struct winsize info = {0};
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &info);
 
 	return info.ws_col;
@@ -70,15 +70,18 @@ char term_getch(void) {
 	return _getch();
 #else
 	struct termios original, new;
-	tcgetattr(STDIN_FILENO, &original);
-	new = original;
+	if (tcgetattr(STDIN_FILENO, &original) == 0) {
+		new = original;
 
-	// Disabilita la modalità canonica (vedi termios(3))
-	new.c_lflag &= ~ICANON;
-	tcsetattr(STDIN_FILENO, TCSANOW, &new);
+		// Disabilita la modalità canonica (vedi termios(3))
+		new.c_lflag &= ~ICANON;
+		tcsetattr(STDIN_FILENO, TCSANOW, &new);
 
-	char input = fgetc(stdin);
-	tcsetattr(STDIN_FILENO, TCSANOW, &original);	// Ripristina lo stato originale
-	return input;
+		char byte = fgetc(stdin);
+		tcsetattr(STDIN_FILENO, TCSANOW, &original);	// Ripristina lo stato originale
+		return byte;
+	}
+
+	return fgetc(stdin);
 #endif
 }
