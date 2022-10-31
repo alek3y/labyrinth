@@ -4,7 +4,7 @@
 #include "util.h"
 
 void print_clean(char *string) {
-	unsigned int columns = term_width();
+	unsigned int columns = term_width() - 1;
 
 	char empty_line[columns + 1];
 	memset(empty_line, ' ', columns);
