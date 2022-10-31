@@ -4,6 +4,12 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#define KEY_UP 'N'
+#define KEY_RIGHT 'E'
+#define KEY_DOWN 'S'
+#define KEY_LEFT 'O'
+#define KEY_QUIT 0x4
+
 #define SYMBOL_PLAYER 'o'
 #define SYMBOL_WALL '#'
 #define SYMBOL_OBSTACLE '!'

@@ -64,16 +64,45 @@ int main(void) {
 			}
 		}
 
+		bool should_quit = false;
 		int dx = 0, dy = 0;
 		while (dx == 0 && dy == 0) {
 			print_clean(MSG_PROMPT);
 			fflush(stdout);
 
 			char input = term_getch();
-			printf("\n%c\n", input);
+			if (input == KEY_QUIT || input == EOF) {
+				should_quit = true;
+				break;
+			}
+
+			switch (input) {
+				case KEY_UP:
+				case KEY_UP + 0x20:	// Versione minuscola
+					dy = -1;
+					break;
+				case KEY_RIGHT:
+				case KEY_RIGHT + 0x20:
+					dx = 1;
+					break;
+				case KEY_DOWN:
+				case KEY_DOWN + 0x20:
+					dy = 1;
+					break;
+				case KEY_LEFT:
+				case KEY_LEFT + 0x20:
+					dx = -1;
+					break;
+			}
+		}
+
+		if (should_quit) {
+			print_clean("");
 			break;
 		}
-		break;
+
+		term_cursor_scroll(-map.rows);
+		term_sleep(1000);
 	}
 
 	map_free(&map);
