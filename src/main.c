@@ -55,7 +55,6 @@ int main(void) {
 	while (true) {
 		char map_row[map.columns + 1];
 		map_row[map.columns] = 0;
-
 		MAP_ITERATE(map, i, x, y) {
 			if (x == player.x && y == player.y) {
 				map_row[x] = player.symbol;
@@ -69,11 +68,22 @@ int main(void) {
 			}
 		}
 
+		// TODO: A ogni iterazione vengono cancellati dal printf_clean della mappa
+		term_cursor_move(-map.rows + 1, map.columns + 3);
+		printf("Score: %ld\r", player.score);
+
+		term_cursor_move(2, map.columns + 3);
+		printf("Controlli:\r");
+		term_cursor_move(2, map.columns + 9);
+		printf("%c (↑)\r", KEY_UP);
+		term_cursor_move(1, map.columns + 3);
+		printf("%c (←) %c (↓) %c (→)\r", KEY_LEFT, KEY_DOWN, KEY_RIGHT);
+		term_cursor_move(map.rows - 6, 0);
+
+		fflush(stdout);
+
 		int dx = 0, dy = 0;
 		while ((!should_quit) && (dx == 0 && dy == 0)) {
-			printf_clean("\r%s", MSG_PROMPT);	// TODO: Fare una lista di passi fatti?
-			fflush(stdout);
-
 			char input = term_getch();
 			if (input == KEY_QUIT || input == EOF) {
 				should_quit = true;
@@ -101,8 +111,7 @@ int main(void) {
 		}
 
 		if (should_quit) {
-			printf_clean("\rScore: %ld", player.score);
-			printf("\n");
+			printf_clean("\r");
 			break;
 		}
 
