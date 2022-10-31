@@ -14,6 +14,7 @@
 #define SYMBOL_WALL '#'
 #define SYMBOL_OBSTACLE '!'
 #define SYMBOL_COIN '$'
+#define SYMBOL_EXIT '_'
 
 #define PATH_LEVELS "res/levels"
 

@@ -30,8 +30,8 @@ Map map_load(FILE *level);
 
 //! @brief Trova la cella sulla mappa.
 //! @return Un puntatore alla cella della mappa nella
-//! riga `row` e nella colonna `column`.
-char *map_at(Map map, size_t row, size_t column);
+//! riga `y` e nella colonna `x`.
+char *map_at(Map map, size_t x, size_t y);
 
 //! @brief Libera la memoria occupata dalla mappa.
 void map_free(Map *map);

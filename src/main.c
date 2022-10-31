@@ -49,14 +49,18 @@ int main(void) {
 	}
 
 	Map map = map_load(level);
-	Player player = player_retrieve(SYMBOL_PLAYER, map);
+	Player player = player_retrieve(map, SYMBOL_PLAYER);
 
 	while (true) {
 		char map_row[map.columns + 1];
 		map_row[map.columns] = 0;
 
 		MAP_ITERATE(map, i, x, y) {
-			map_row[x] = map.map[i];
+			if (x == player.x && y == player.y) {
+				map_row[x] = player.symbol;
+			} else {
+				map_row[x] = map.map[i];
+			}
 
 			if (x + 1 >= map.columns) {
 				print_clean(map_row);
@@ -101,10 +105,31 @@ int main(void) {
 			break;
 		}
 
+		if (player_step(&player, dx, dy, map)) {
+			char *cell = map_at(map, player.x, player.y);
+
+			switch (*cell) {
+				case SYMBOL_WALL:
+					player_step(&player, -dx, -dy, map);	// Torna indietro
+					break;
+				case SYMBOL_OBSTACLE:
+					*cell = ' ';
+					player.score /= 2;
+					break;
+				case SYMBOL_COIN:
+					*cell = ' ';
+					player.score += 3;
+					break;
+				case SYMBOL_EXIT:
+					// TODO
+					break;
+			}
+		}
+
 		term_cursor_scroll(-map.rows);
-		term_sleep(1000);
 	}
 
 	map_free(&map);
 	fclose(level);
+	return 0;
 }

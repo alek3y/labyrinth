@@ -51,11 +51,11 @@ Map map_load(FILE *level) {
 	return map;
 }
 
-char *map_at(Map map, size_t row, size_t column) {
-	assert(column < map.columns);
-	assert(row < map.rows);
+char *map_at(Map map, size_t x, size_t y) {
+	assert(x < map.columns);
+	assert(y < map.rows);
 
-	return &map.map[row * map.columns + column];
+	return &map.map[y * map.columns + x];
 }
 
 void map_free(Map *map) {
