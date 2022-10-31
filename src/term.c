@@ -14,11 +14,7 @@
 #include <termios.h>
 #endif
 
-void term_cursor_scroll(int dy) {
-	if (dy == 0) {
-		return;
-	}
-
+void term_cursor_move(int dy, int dx) {
 #ifdef _WIN32
 	HANDLE output = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -26,14 +22,18 @@ void term_cursor_scroll(int dy) {
 	GetConsoleScreenBufferInfo(output, &info);
 
 	info.dwCursorPosition.Y += dy;
+	info.dwCursorPosition.X += dx;
 	SetConsoleCursorPosition(output, info.dwCursorPosition);
 #else
-	char direction = 'B';	// Down
-	if (dy < 0) {
-		direction = 'A';	// Up
+	if (dy != 0) {
+		printf("\x1b[%d%c", abs(dy), dy > 0 ? 'B' : 'A');
+		fflush(stdout);
 	}
-	printf("\x1b[%d%c", abs(dy), direction);
-	fflush(stdout);
+
+	if (dx != 0) {
+		printf("\x1b[%d%c", abs(dx), dx > 0 ? 'C' : 'D');
+		fflush(stdout);
+	}
 #endif
 }
 

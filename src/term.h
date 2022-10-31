@@ -4,11 +4,11 @@
 #ifndef TERM_H
 #define TERM_H
 
-//! @brief Sposta il cursore `dy` colonne.
+//! @brief Sposta il cursore `dy` righe e `dx` colonne.
 //! @details Su Linux vengono utilizzate le sequenze CSI per spostare il cursore,
 //! mentre su Windows si ricava prima la posizione con `GetConsoleScreenBufferInfo`
 //! e poi viene aggiornata con `SetConsoleCursorPosition`.
-void term_cursor_scroll(int dy);
+void term_cursor_move(int dy, int dx);
 
 //! @brief Attende `ms` millisecondi.
 //! @details Su Windows viene usata la funzione `Sleep`, mentre su Linux viene

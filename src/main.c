@@ -126,7 +126,7 @@ int main(void) {
 			}
 		}
 
-		term_cursor_scroll(-map.rows);
+		term_cursor_move(-map.rows, 0);
 	}
 
 	map_free(&map);
