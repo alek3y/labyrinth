@@ -33,9 +33,11 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-#include "util.h"
+#include <string.h>
+#include "term.h"
 #include "map.h"
 #include "player.h"
+#include "util.h"
 #include "config.h"
 
 //! @brief Entry del programma contenente il loop di gioco principale.
@@ -50,10 +52,28 @@ int main(void) {
 	Player player = player_retrieve(SYMBOL_PLAYER, map);
 
 	while (true) {
-		printf("\r");
-		map_print(map);
-		msleep(1000);
-		cursor_move_rows(-map.rows);
+		char map_row[map.columns + 1];
+		map_row[map.columns] = 0;
+
+		MAP_ITERATE(map, i, x, y) {
+			map_row[x] = map.map[i];
+
+			if (x + 1 >= map.columns) {
+				print_clean(map_row);
+				printf("\n");
+			}
+		}
+
+		int dx = 0, dy = 0;
+		while (dx == 0 && dy == 0) {
+			print_clean(MSG_PROMPT);
+			fflush(stdout);
+
+			char input = term_getch();
+			printf("\n%c\n", input);
+			break;
+		}
+		break;
 	}
 
 	map_free(&map);

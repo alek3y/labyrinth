@@ -22,9 +22,6 @@ for ( \
 	i++, x = i % (map).columns, y = i / (map).columns \
 )
 
-//! @brief Stampa la mappa in `stdout`.
-void map_print(Map map);
-
 //! @brief Carica la mappa dal file `level`.
 //! @details La lettura non parte dall'inizio del file,
 //! ma dal punto in cui si trova il cursore.
