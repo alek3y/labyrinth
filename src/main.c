@@ -51,6 +51,7 @@ int main(void) {
 	Map map = map_load(level);
 	Player player = player_retrieve(map, SYMBOL_PLAYER);
 
+	bool should_quit = false;
 	while (true) {
 		char map_row[map.columns + 1];
 		map_row[map.columns] = 0;
@@ -63,15 +64,14 @@ int main(void) {
 			}
 
 			if (x + 1 >= map.columns) {
-				print_clean(map_row);
+				printf_clean("\r%s", map_row);
 				printf("\n");
 			}
 		}
 
-		bool should_quit = false;
 		int dx = 0, dy = 0;
-		while (dx == 0 && dy == 0) {
-			print_clean(MSG_PROMPT);
+		while ((!should_quit) && (dx == 0 && dy == 0)) {
+			printf_clean("\r%s", MSG_PROMPT);	// TODO: Fare una lista di passi fatti?
 			fflush(stdout);
 
 			char input = term_getch();
@@ -101,7 +101,8 @@ int main(void) {
 		}
 
 		if (should_quit) {
-			print_clean("");
+			printf_clean("\rScore: %ld", player.score);
+			printf("\n");
 			break;
 		}
 
@@ -121,7 +122,10 @@ int main(void) {
 					player.score += 3;
 					break;
 				case SYMBOL_EXIT:
-					// TODO
+					should_quit = true;
+					break;
+				case ' ':
+					player.score--;
 					break;
 			}
 		}

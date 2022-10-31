@@ -1,15 +1,20 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdarg.h>
 #include "term.h"
 #include "util.h"
 
-void print_clean(char *string) {
-	printf("\r%s", string);
+int printf_clean(char *format, ...) {
+	va_list arguments;
+
+	int bytes_written;
+	va_start(arguments, format);
+	bytes_written = vprintf(format, arguments);
+	va_end(arguments);
 
 	unsigned int columns = term_width() - 1;
-	size_t string_len = strlen(string);
-	if (string_len <= columns) {
-		size_t empty_len = columns - string_len;
+	if (bytes_written >= 0 && (size_t) bytes_written <= columns) {
+		size_t empty_len = columns - bytes_written;
 
 		char empty[empty_len + 1];
 		memset(empty, ' ', empty_len);
@@ -18,4 +23,6 @@ void print_clean(char *string) {
 		printf("%s", empty);
 		term_cursor_move(0, -empty_len);
 	}
+
+	return bytes_written;
 }

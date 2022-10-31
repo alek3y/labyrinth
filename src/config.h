@@ -18,6 +18,6 @@
 
 #define PATH_LEVELS "res/levels"
 
-#define MSG_PROMPT "Inserisci la direzione cardinale: "
+#define MSG_PROMPT "Premi una direzione: "
 
 #endif
