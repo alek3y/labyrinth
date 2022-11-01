@@ -55,6 +55,7 @@ int main(void) {
 	while (true) {
 		char map_row[map.columns + 1];
 		map_row[map.columns] = 0;
+
 		MAP_ITERATE(map, i, x, y) {
 			if (x == player.x && y == player.y) {
 				map_row[x] = player.symbol;
@@ -63,23 +64,27 @@ int main(void) {
 			}
 
 			if (x + 1 >= map.columns) {
-				printf_clean("\r%s", map_row);
+				switch (y) {
+					case 1:
+						printf_clean("%s   Score: %ld", map_row, player.score);
+						break;
+					case 3:
+						printf_clean("%s   Controlli:", map_row);
+						break;
+					case 5:
+
+						// TODO: La freccia non è supportata su cmd.exe
+						printf_clean("%s         %c (↑)", map_row, KEY_UP);
+						break;
+					case 6:
+						printf_clean("%s   %c (←) %c (↓) %c (→)", map_row, KEY_LEFT, KEY_DOWN, KEY_RIGHT);
+						break;
+					default:
+						printf_clean("%s", map_row);
+				}
 				printf("\n");
 			}
 		}
-
-		// TODO: A ogni iterazione vengono cancellati dal printf_clean della mappa
-		term_cursor_move(-map.rows + 1, map.columns + 3);
-		printf("Score: %ld\r", player.score);
-
-		term_cursor_move(2, map.columns + 3);
-		printf("Controlli:\r");
-		term_cursor_move(2, map.columns + 9);
-		printf("%c (↑)\r", KEY_UP);
-		term_cursor_move(1, map.columns + 3);
-		printf("%c (←) %c (↓) %c (→)\r", KEY_LEFT, KEY_DOWN, KEY_RIGHT);
-		term_cursor_move(map.rows - 6, 0);
-
 		fflush(stdout);
 
 		int dx = 0, dy = 0;

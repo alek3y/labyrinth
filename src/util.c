@@ -5,11 +5,11 @@
 #include "util.h"
 
 int printf_clean(char *format, ...) {
-	va_list arguments;
+	printf("\r");
 
-	int bytes_written;
+	va_list arguments;
 	va_start(arguments, format);
-	bytes_written = vprintf(format, arguments);
+	int bytes_written = vprintf(format, arguments);
 	va_end(arguments);
 
 	unsigned int columns = term_width() - 1;
