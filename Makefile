@@ -3,9 +3,14 @@ CFLAGS = -g -std=c99 -pedantic -Wall -Wextra -Wshadow
 CFLAGS += -Wno-unused-but-set-variable
 
 SRC = $(wildcard src/*.c)
-BIN = bin/game
+BIN := bin/game
 
-BINDIR = $(shell dirname "$(BIN)")
+ifeq ($(OS),Windows_NT)
+	BIN := $(BIN).exe
+	BINDIR = "$(BIN)/.."
+else
+	BINDIR = $(shell dirname "$(BIN)")
+endif
 
 # Lista dei target non-file
 .PHONY: all docs clean
@@ -13,7 +18,7 @@ BINDIR = $(shell dirname "$(BIN)")
 all: $(BINDIR) $(BIN)
 
 $(BINDIR):
-	mkdir -p $(BINDIR)
+	-mkdir $(BINDIR)
 
 # La variabile automatica $@ è il target,
 # e $^ sono i prerequisiti (file .c)
@@ -24,4 +29,8 @@ docs:
 	doxygen
 
 clean:
+ifeq ($(OS),Windows_NT)
+	-rd /s /q $(BINDIR) docs
+else
 	-rm -r $(BINDIR) docs
+endif
