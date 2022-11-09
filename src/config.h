@@ -16,8 +16,8 @@
 #define SYMBOL_COIN '$'
 #define SYMBOL_EXIT '_'
 
-#define PATH_LEVELS "res/levels"
+#define COLLISIONS ((char[]) {SYMBOL_WALL, '\0'})
 
-#define MSG_PROMPT "Premi una direzione: "
+#define PATH_LEVELS "res/levels"
 
 #endif

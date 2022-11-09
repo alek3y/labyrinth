@@ -14,16 +14,17 @@ typedef struct {
 	long score;
 } Player;
 
-//! @brief Genera e rimuove il simbolo corrispondente al giocatore dalla mappa.
+//! @brief Genera il giocatore e rimuove il simbolo corrispondente dalla mappa.
 //! @return Il giocatore con posizione corrispondente a quella sulla mappa.
 Player player_retrieve(Map map, char symbol);
 
 //! @brief Controlla se il giocatore può muoversi e lo sposta sulla mappa.
-//! @param map Mappa su cui si dovrebbe spostare.
-//! @param player Giocatore su cui va effettuato lo spostamento.
+//! @param player Giocatore da spostare.
 //! @param dx Differenza di colonne di cui spostarsi.
 //! @param dy Differenza di righe di cui spostarsi.
+//! @param map Mappa su cui si dovrebbe spostare il giocatore.
+//! @param collisions Stringa degli elementi con cui collidere.
 //! @return Vero, se è stato possibile spostare il giocatore, altrimenti falso.
-bool player_step(Player *player, long dx, long dy, Map map);
+bool player_step(Player *player, long dx, long dy, Map map, char *collisions);
 
 #endif

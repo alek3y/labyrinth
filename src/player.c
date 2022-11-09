@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "map.h"
 #include "player.h"
 
@@ -18,19 +19,26 @@ Player player_retrieve(Map map, char symbol) {
 	return player;
 }
 
-bool player_step(Player *player, long dx, long dy, Map map) {
+bool player_step(Player *player, long dx, long dy, Map map, char *collisions) {
 
 	// Confine Nord-Ovest
 	if ((dx < 0 && (size_t) labs(dx) > player->x) || (dy < 0 && (size_t) labs(dy) > player->y)) {
 		return false;
 	}
 
+	size_t x = player->x + dx, y = player->y + dy;
+
 	// Confine Sud-Est
-	if (player->x + dx >= map.columns || player->y + dy >= map.rows) {
+	if (x >= map.columns || y >= map.rows) {
 		return false;
 	}
 
-	player->x += dx;
-	player->y += dy;
+	// Collisioni in base al contenuto della cella
+	if (strchr(collisions, *map_at(map, x, y)) != NULL) {
+		return false;
+	}
+
+	player->x = x;
+	player->y = y;
 	return true;
 }

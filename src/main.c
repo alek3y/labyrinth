@@ -117,16 +117,14 @@ int main(void) {
 
 		if (should_quit) {
 			printf_clean("\r");
+			printf("\n");
 			break;
 		}
 
-		if (player_step(&player, dx, dy, map)) {
+		if (player_step(&player, dx, dy, map, COLLISIONS)) {
 			char *cell = map_at(map, player.x, player.y);
 
 			switch (*cell) {
-				case SYMBOL_WALL:
-					player_step(&player, -dx, -dy, map);	// Torna indietro
-					break;
 				case SYMBOL_OBSTACLE:
 					*cell = ' ';
 					player.score /= 2;
