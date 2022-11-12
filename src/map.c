@@ -5,10 +5,15 @@
 #include <assert.h>
 #include "map.h"
 
-Map map_load(FILE *level) {
+Map map_load(FILE *level, char obstacle, char coin, char exit, char *collisions) {
 	assert(level != NULL);
 
-	Map map = {.rows = 0, .columns = 0};
+	Map map = {
+		.obstacle = obstacle,
+		.coin = coin, .exit = exit,
+		.collisions = collisions,
+		.rows = 0, .columns = 0
+	};
 	long start = ftell(level);
 
 	size_t columns = 0;

@@ -48,7 +48,7 @@ int main(void) {
 		return 1;
 	}
 
-	Map map = map_load(level);
+	Map map = map_load(level, SYMBOL_OBSTACLE, SYMBOL_COIN, SYMBOL_EXIT, COLLISIONS);
 	Player player = player_retrieve(map, SYMBOL_PLAYER);
 
 	bool should_quit = false;
@@ -121,28 +121,10 @@ int main(void) {
 			break;
 		}
 
-		if (player_step(&player, dx, dy, map, COLLISIONS)) {
-			char *cell = map_at(map, player.x, player.y);
-
-			switch (*cell) {
-				case SYMBOL_OBSTACLE:
-					*cell = ' ';
-					if (player.score < 0) {
-						player.score *= 2;
-					} else {
-						player.score /= 2;
-					}
-					break;
-				case SYMBOL_COIN:
-					*cell = ' ';
-					player.score += 3;
-					break;
-				case SYMBOL_EXIT:
-					should_quit = true;
-					break;
-				case ' ':
-					player.score--;
-					break;
+		if (player_step(&player, dx, dy, map)) {
+			char cell = *map_at(map, player.x, player.y);
+			if (cell == map.exit) {
+				should_quit = true;
 			}
 		}
 

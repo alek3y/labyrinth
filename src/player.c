@@ -19,7 +19,7 @@ Player player_retrieve(Map map, char symbol) {
 	return player;
 }
 
-bool player_step(Player *player, long dx, long dy, Map map, char *collisions) {
+bool player_step(Player *player, long dx, long dy, Map map) {
 
 	// Confine Nord-Ovest
 	if ((dx < 0 && (size_t) labs(dx) > player->x) || (dy < 0 && (size_t) labs(dy) > player->y)) {
@@ -34,11 +34,28 @@ bool player_step(Player *player, long dx, long dy, Map map, char *collisions) {
 	}
 
 	// Collisioni in base al contenuto della cella
-	if (strchr(collisions, *map_at(map, x, y)) != NULL) {
+	if (strchr(map.collisions, *map_at(map, x, y)) != NULL) {
 		return false;
 	}
 
 	player->x = x;
 	player->y = y;
+
+	// Aggiorna lo score del giocatore in base al contenuto della mappa
+	char *cell = map_at(map, x, y);
+	if (*cell == map.obstacle) {
+		*cell = ' ';
+		if (player->score < 0) {
+			player->score *= 2;
+		} else {
+			player->score /= 2;
+		}
+	} else if (*cell == map.coin) {
+			*cell = ' ';
+			player->score += 3;
+	} else if (*cell == ' ') {
+		player->score--;
+	}
+
 	return true;
 }

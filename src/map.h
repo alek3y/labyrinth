@@ -9,6 +9,7 @@
 //! @brief Struttura contenente le informazioni della mappa.
 typedef struct {
 	char *map;
+	char obstacle, coin, exit, *collisions;
 	size_t rows, columns;
 } Map;
 
@@ -28,7 +29,7 @@ for ( \
 //! @details La lettura non parte dall'inizio del file,
 //! ma dal punto in cui si trova il cursore.
 //! @return La struttura generata dal contenuto del file.
-Map map_load(FILE *level);
+Map map_load(FILE *level, char obstacle, char coin, char exit, char *collisions);
 
 //! @brief Trova la cella sulla mappa.
 //! @return Un puntatore alla cella della mappa nella
