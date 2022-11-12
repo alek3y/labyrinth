@@ -4,6 +4,8 @@
 #ifndef MAP_H
 #define MAP_H
 
+#include <stdio.h>
+
 //! @brief Struttura contenente le informazioni della mappa.
 typedef struct {
 	char *map;

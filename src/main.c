@@ -87,7 +87,7 @@ int main(void) {
 		}
 		fflush(stdout);
 
-		int dx = 0, dy = 0;
+		long dx = 0, dy = 0;
 		while ((!should_quit) && (dx == 0 && dy == 0)) {
 			char input = term_getch();
 			if (input == KEY_QUIT || input == EOF) {
@@ -127,7 +127,11 @@ int main(void) {
 			switch (*cell) {
 				case SYMBOL_OBSTACLE:
 					*cell = ' ';
-					player.score /= 2;
+					if (player.score < 0) {
+						player.score *= 2;
+					} else {
+						player.score /= 2;
+					}
 					break;
 				case SYMBOL_COIN:
 					*cell = ' ';

@@ -4,6 +4,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <stdio.h>
 #include <stdbool.h>
 #include "map.h"
 
