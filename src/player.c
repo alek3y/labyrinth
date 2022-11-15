@@ -44,15 +44,13 @@ bool player_step(Player *player, long dx, long dy, Map map) {
 	// Aggiorna lo score del giocatore in base al contenuto della mappa
 	char *cell = map_at(map, x, y);
 	if (*cell == map.obstacle) {
-		*cell = ' ';
 		if (player->score < 0) {
 			player->score *= 2;
 		} else {
 			player->score /= 2;
 		}
 	} else if (*cell == map.coin) {
-			*cell = ' ';
-			player->score += 3;
+		player->score += 3;
 	} else if (*cell == ' ') {
 		player->score--;
 	}

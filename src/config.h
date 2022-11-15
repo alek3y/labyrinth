@@ -11,12 +11,11 @@
 #define KEY_QUIT 0x4
 
 #define SYMBOL_PLAYER 'o'
-#define SYMBOL_WALL '#'
 #define SYMBOL_OBSTACLE '!'
 #define SYMBOL_COIN '$'
 #define SYMBOL_EXIT '_'
 
-#define COLLISIONS ((char[]) {SYMBOL_WALL, '\0'})
+#define COLLISIONS ((char[]) {'#', '\0'})
 
 #define PATH_LEVELS "res/levels"
 

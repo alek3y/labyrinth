@@ -122,9 +122,12 @@ int main(void) {
 		}
 
 		if (player_step(&player, dx, dy, map)) {
-			char cell = *map_at(map, player.x, player.y);
-			if (cell == map.exit) {
+			char *cell = map_at(map, player.x, player.y);
+
+			if (*cell == map.exit) {
 				should_quit = true;
+			} else {
+				*cell = ' ';	// Rimuove l'oggetto raccolto
 			}
 		}
 
