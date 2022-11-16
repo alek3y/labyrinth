@@ -25,9 +25,11 @@ for ( \
 	i++, x = i % (map).columns, y = i / (map).columns \
 )
 
-//! @brief Carica la mappa dal file `level`.
-//! @return La struttura generata dal contenuto del file.
-void map_load(Map *map, FILE *level);
+//! @brief Carica la mappa dal file `level` sulla struttura `map`.
+void map_from_file(Map *map, FILE *level);
+
+//! @brief Carica la mappa dalla stringa `level` sulla struttura `map`.
+void map_from_str(Map *map, char *level);
 
 //! @brief Trova la cella sulla mappa.
 //! @return Un puntatore alla cella della mappa nella

@@ -5,52 +5,70 @@
 #include <assert.h>
 #include "map.h"
 
-//! @details La funzione comincia la lettura del file dal punto
-//! in cui si trova il cursore e non dall'inizio del file.
-void map_load(Map *map, FILE *level) {
+//! @details Perchè la lettura funzioni, deve essere presente un
+//! '\\n' su ogni riga della mappa (inclusa l'ultima).
+void map_from_str(Map *map, char *level) {
 	assert(map != NULL && level != NULL);
 
-	map->rows = 0;
 	map->columns = 0;
+	char *head = level, *tail;
+	while ((tail = strchr(head, '\n')) != NULL) {
+		if ((size_t) (tail - head) > map->columns) {
+			map->columns = tail - head;
+		}
+
+		head = tail + 1;
+		map->rows++;
+	}
+
+	map->map = calloc(map->rows * map->columns, 1);
+	head = level;
+	while ((tail = strchr(head, '\n')) != NULL) {
+		size_t row_len = tail - head;
+		strncat(map->map, head, row_len);
+
+		// Riempi le colonne mancanti con spazi
+		if (row_len < map->columns) {
+			memset(map->map + strlen(map->map), ' ', map->columns - row_len);
+		}
+
+		head = tail + 1;
+	}
+}
+
+
+//! @details La funzione comincia la lettura del file dal punto
+//! in cui si trova il cursore e non dall'inizio del file.
+//! Utilizza lo stesso standard di lettura di `map_from_str`.
+void map_from_file(Map *map, FILE *level) {
+	assert(map != NULL && level != NULL);
+
 	long start = ftell(level);
 
-	size_t columns = 0;
+	size_t buffer_len = 0, newlines = 0;
 	while (true) {
 		char cell = fgetc(level);
-		if (cell == '\n' || cell == EOF) {
-			if (columns == 0) {
-				break;	// Ferma il parsing a "\n\n" o {'\n', EOF}
-			}
-
-			if (columns > map->columns) {
-				map->columns = columns;
-			}
-			columns = 0;
-
-			map->rows++;
-		} else {
-			columns++;
+		if (cell == '\n') {
+			newlines++;
 		}
+
+		if (newlines >= 2 || cell == EOF) {
+			break;
+		}
+
+		newlines = 0;
+		buffer_len++;
 	}
 
+	char *buffer = malloc(buffer_len);
 	fseek(level, start, SEEK_SET);
-	map->map = malloc(map->rows * map->columns);
-	for (size_t i = 0; i < map->rows * map->columns; ) {
-		char cell = fgetc(level);
-		if (cell == '\n' || cell == EOF) {
+	fread(buffer, 1, buffer_len, level);
+	buffer[buffer_len] = '\0';
 
-			// Riempi le colonne mancanti con spazi
-			if (i % map->columns != 0) {
-				size_t padding = map->columns - (i % map->columns);
-				memset(&map->map[i], ' ', padding);
-				i += padding;
-			}
-		} else {
-			map->map[i++] = cell;
-		}
-	}
+	map_from_str(map, buffer);
 
-	fseek(level, 2, SEEK_CUR);	// Salta il "\n\n" se presente
+	free(buffer);
+	fseek(level, 1, SEEK_CUR);	// Salta il "\n\n" se presente
 }
 
 char *map_at(Map map, size_t x, size_t y) {

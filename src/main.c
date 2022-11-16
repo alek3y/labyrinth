@@ -43,18 +43,13 @@
 //! @brief Entry del programma contenente il loop di gioco principale.
 //! @return Valori non-zero se c'è stato un errore durante l'inizializzazione.
 int main(void) {
-	FILE *level = fopen(PATH_LEVELS "/0.txt", "r");	// TODO: Supporto per più livelli
-	if (level == NULL) {
-		return 1;
-	}
-
 	Map map = {
 		.obstacle = SYMBOL_OBSTACLE,
 		.coin = SYMBOL_COIN,
 		.exit = SYMBOL_EXIT,
 		.collisions = COLLISIONS
 	};
-	map_load(&map, level);
+	map_from_str(&map, DEFAULT_LEVEL);
 	Player player = player_retrieve(map, SYMBOL_PLAYER);
 
 	bool should_quit = false;
@@ -141,6 +136,5 @@ int main(void) {
 	}
 
 	map_free(&map);
-	fclose(level);
 	return 0;
 }

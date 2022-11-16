@@ -17,6 +17,16 @@
 
 #define COLLISIONS ((char[]) {'#', '\0'})
 
-#define PATH_LEVELS "res/levels"
+#define DEFAULT_LEVEL \
+	"###################\n" \
+	"o    #          $ #\n" \
+	"#    #          $ #\n" \
+	"#    #   !  #   $ #\n" \
+	"#    #      #   $ #\n" \
+	"#    #      #     _\n" \
+	"#    #      #     #\n" \
+	"#           #     #\n" \
+	"#    $$$$   #     #\n" \
+	"###################\n"
 
 #endif
