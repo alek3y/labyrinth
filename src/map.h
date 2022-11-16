@@ -27,7 +27,7 @@ for ( \
 
 //! @brief Carica la mappa dal file `level`.
 //! @return La struttura generata dal contenuto del file.
-Map map_load(FILE *level, char obstacle, char coin, char exit, char *collisions);
+void map_load(Map *map, FILE *level);
 
 //! @brief Trova la cella sulla mappa.
 //! @return Un puntatore alla cella della mappa nella

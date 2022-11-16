@@ -48,7 +48,13 @@ int main(void) {
 		return 1;
 	}
 
-	Map map = map_load(level, SYMBOL_OBSTACLE, SYMBOL_COIN, SYMBOL_EXIT, COLLISIONS);
+	Map map = {
+		.obstacle = SYMBOL_OBSTACLE,
+		.coin = SYMBOL_COIN,
+		.exit = SYMBOL_EXIT,
+		.collisions = COLLISIONS
+	};
+	map_load(&map, level);
 	Player player = player_retrieve(map, SYMBOL_PLAYER);
 
 	bool should_quit = false;

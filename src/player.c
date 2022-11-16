@@ -22,6 +22,7 @@ Player player_retrieve(Map map, char symbol) {
 //! @details La funzione contiene le regole che aggiornano il punteggio del
 //! giocatore in base ai simboli definiti all'interno dello struct `Map`.
 bool player_step(Player *player, long dx, long dy, Map map) {
+	assert(player != NULL);
 
 	// Confine Nord-Ovest
 	if ((dx < 0 && (size_t) labs(dx) > player->x) || (dy < 0 && (size_t) labs(dy) > player->y)) {
