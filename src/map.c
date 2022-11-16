@@ -71,6 +71,21 @@ void map_from_file(Map *map, FILE *level) {
 	fseek(level, 1, SEEK_CUR);	// Salta il "\n\n" se presente
 }
 
+//! @details Questa versione non permette la lettura di righe
+//! con un numero di colonne diverso da `columns`.
+void map_from_stdin(Map *map, size_t columns, size_t rows) {
+	assert(map != NULL);
+
+	map->rows = rows;
+	map->columns = columns;
+
+	map->map = malloc(rows * columns);
+	for (size_t i = 0; i < rows; i++) {
+		fread(map->map + i * columns, 1, columns, stdin);
+		fgetc(stdin);	// Salta il '\n'
+	}
+}
+
 char *map_at(Map map, size_t x, size_t y) {
 	assert(map.map != NULL);
 	assert(x < map.columns && y < map.rows);

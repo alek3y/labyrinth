@@ -31,6 +31,9 @@ void map_from_file(Map *map, FILE *level);
 //! @brief Carica la mappa dalla stringa `level` sulla struttura `map`.
 void map_from_str(Map *map, char *level);
 
+//! @brief Carica la mappa dallo _standard input_ sulla struttura `map`.
+void map_from_stdin(Map *map, size_t columns, size_t rows);
+
 //! @brief Trova la cella sulla mappa.
 //! @return Un puntatore alla cella della mappa nella
 //! riga `y` e nella colonna `x`.

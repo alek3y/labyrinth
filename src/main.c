@@ -54,8 +54,8 @@ int main(void) {
 
 	bool should_quit = false;
 	while (true) {
-		char map_row[map.columns + 1];
-		map_row[map.columns] = 0;
+		char map_row[map.columns + 1];	// TODO: Malloc?
+		map_row[map.columns] = '\0';
 
 		MAP_ITERATE(map, i, x, y) {
 			if (x == player.x && y == player.y) {
@@ -65,6 +65,8 @@ int main(void) {
 			}
 
 			if (x + 1 >= map.columns) {
+
+				// TODO: Se la mappa è troppo piccola non tutti i testi si vedono
 				switch (y) {
 					case 1:
 						printf_clean("%s   Score: %ld", map_row, player.score);
