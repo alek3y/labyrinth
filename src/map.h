@@ -26,8 +26,6 @@ for ( \
 )
 
 //! @brief Carica la mappa dal file `level`.
-//! @details La lettura non parte dall'inizio del file,
-//! ma dal punto in cui si trova il cursore.
 //! @return La struttura generata dal contenuto del file.
 Map map_load(FILE *level, char obstacle, char coin, char exit, char *collisions);
 

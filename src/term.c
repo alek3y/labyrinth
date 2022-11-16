@@ -14,6 +14,9 @@
 #include <termios.h>
 #endif
 
+//! @details Su Linux vengono utilizzate le sequenze CSI per spostare il cursore,
+//! mentre su Windows si ricava prima la posizione con `GetConsoleScreenBufferInfo`
+//! e poi viene aggiornata con `SetConsoleCursorPosition`.
 void term_cursor_move(int dy, int dx) {
 #ifdef _WIN32
 	HANDLE output = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -37,6 +40,8 @@ void term_cursor_move(int dy, int dx) {
 #endif
 }
 
+//! @details Su Windows viene usata la funzione `Sleep`, mentre su Linux viene
+//! usata `select` (in modo da evitare le _Feature Test Macro_).
 void term_sleep(unsigned int ms) {
 #ifdef _WIN32
 	Sleep(ms);
@@ -49,6 +54,8 @@ void term_sleep(unsigned int ms) {
 #endif
 }
 
+//! @details Su Windows la grandezza viene restituita da `GetConsoleScreenBufferInfo`,
+//! mentre su Linux le informazioni vengono richieste con `ioctl`.
 unsigned int term_width(void) {
 #ifdef _WIN32
 	HANDLE output = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -65,6 +72,9 @@ unsigned int term_width(void) {
 #endif
 }
 
+//! @details Su Windows viene usata la funzione `_getch` proveniente da `conio.h`,
+//! mentre su Linux viene prima disabilitata la modalità _canonica_ per poi leggere
+//! il carattere.
 char term_getch(void) {
 #ifdef _WIN32
 	return _getch();

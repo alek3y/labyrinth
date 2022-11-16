@@ -5,6 +5,8 @@
 #include <assert.h>
 #include "map.h"
 
+//! @details La funzione comincia la lettura del file dal punto in cui
+//! si trova il cursore e non dall'inizio del file.
 Map map_load(FILE *level, char obstacle, char coin, char exit, char *collisions) {
 	assert(level != NULL);
 

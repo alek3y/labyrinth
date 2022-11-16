@@ -4,6 +4,8 @@
 #include "term.h"
 #include "util.h"
 
+//! @details Non conoscendo la posizione orizzontale del cursore la stampa
+//! viene effettuata all'inzio della riga con '\\r'.
 int printf_clean(char *format, ...) {
 	printf("\r");
 

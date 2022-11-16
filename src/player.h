@@ -20,8 +20,6 @@ typedef struct {
 Player player_retrieve(Map map, char symbol);
 
 //! @brief Controlla se può muoversi, lo sposta e aggiorna il suo punteggio.
-//! @details Contiene le regole che aggiornano il punteggio in base ai simboli
-//! definiti all'interno dello struct `Map`.
 //! @param player Giocatore da spostare.
 //! @param dx Differenza di colonne di cui spostarsi.
 //! @param dy Differenza di righe di cui spostarsi.
