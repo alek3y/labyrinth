@@ -33,6 +33,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
 #include "term.h"
 #include "map.h"
@@ -41,18 +42,75 @@
 #include "util.h"
 #include "config.h"
 
-//! @brief Entry del programma contenente il loop di gioco principale.
-//! @return Valori non-zero se c'è stato un errore durante l'inizializzazione.
-int main(void) {
+//! @brief Loop di gioco principale per la modalità interattiva.
+void mode_interactive(Player player, Map map);
+
+//! @brief Logica per l'elaborazione del percorso migliore.
+void mode_ai(Player player, Map map);
+
+//! @brief Entry del programma con l'inizializzazione della mappa.
+int main(int argc, char **argv) {
+	bool ai_mode = false;
+	for (int i = 0; i < argc; i++) {
+		if (strcmp(argv[i], "--challenge") == 0) {
+			ai_mode = true;
+		}
+	}
+
 	Map map = {
 		.obstacle = SYMBOL_OBSTACLE,
 		.coin = SYMBOL_COIN,
 		.exit = SYMBOL_EXIT,
 		.collisions = COLLISIONS
 	};
-	map_from_str(&map, DEFAULT_LEVEL);
+
+	if (!ai_mode) {
+		map_from_str(&map, DEFAULT_LEVEL);
+	} else {
+		size_t columns, rows;
+		scanf("%lu\n%lu\n", &columns, &rows);
+		map_from_stdin(&map, columns, rows);
+	}
+
 	Player player = player_retrieve(map, SYMBOL_PLAYER);
 
+	if (!ai_mode) {
+		mode_interactive(player, map);
+	} else {
+		mode_ai(player, map);
+	}
+
+	map_free(&map);
+	return 0;
+}
+
+void mode_ai(Player player, Map map) {
+	Steps steps = ai_steps(player, map);
+
+	char *moves = malloc(steps.length + 1);
+	moves[steps.length] = '\0';
+
+	for (size_t i = 1; i < steps.length; i++) {
+		size_t previous = steps.steps[i-1], current = steps.steps[i];
+
+		if (current == previous - map.columns) {
+			moves[i-1] = KEY_UP;
+		} else if (current == previous + map.columns) {
+			moves[i-1] = KEY_DOWN;
+		} else if (current == previous - 1) {
+			moves[i-1] = KEY_LEFT;
+		} else if (current == previous + 1) {
+			moves[i-1] = KEY_RIGHT;
+		}
+	}
+
+	printf("%s\n", moves);
+
+	free(moves);
+	ai_free(&steps);
+}
+
+void mode_interactive(Player player, Map map) {
 	bool should_quit = false;
 	while (true) {
 		char map_row[map.columns + 1];	// TODO: Malloc?
@@ -65,9 +123,8 @@ int main(void) {
 				map_row[x] = map.map[i];
 			}
 
+			// TODO: Se la mappa è troppo piccola non tutti i testi si vedono
 			if (x + 1 >= map.columns) {
-
-				// TODO: Se la mappa è troppo piccola non tutti i testi si vedono
 				switch (y) {
 					case 1:
 						printf_clean("%s   Score: %ld", map_row, player.score);
@@ -91,6 +148,7 @@ int main(void) {
 		}
 		fflush(stdout);
 
+		// Leggi la mossa da tastiera
 		long dx = 0, dy = 0;
 		while ((!should_quit) && (dx == 0 && dy == 0)) {
 			char input = term_getch();
@@ -137,7 +195,4 @@ int main(void) {
 
 		term_cursor_move(-map.rows, 0);
 	}
-
-	map_free(&map);
-	return 0;
 }
