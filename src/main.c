@@ -94,9 +94,7 @@ int main(int argc, char **argv) {
 void mode_ai(Player player, Map map) {
 	Steps steps = ai_steps(player, map);
 
-	char *moves = malloc(steps.length + 1);
-	moves[steps.length] = '\0';
-
+	char *moves = calloc(steps.length + 1, 1);
 	for (size_t i = 1; i < steps.length; i++) {
 		size_t previous = steps.steps[i-1], current = steps.steps[i];
 
