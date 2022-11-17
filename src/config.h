@@ -10,10 +10,15 @@
 #define KEY_LEFT 'O'
 #define KEY_QUIT 0x4
 
-#define SYMBOL_PLAYER 'o'
-#define SYMBOL_OBSTACLE '!'
-#define SYMBOL_COIN '$'
-#define SYMBOL_EXIT '_'
+#define SCORE 1000
+#define OBSTACLE_LOSS 2
+#define STEP_LOSS 1
+#define COIN_GAIN 10
+
+#define PLAYER 'o'
+#define OBSTACLE '!'
+#define COIN '$'
+#define EXIT '_'
 
 #define COLLISIONS ((char[]) {'#', '\0'})
 

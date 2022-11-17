@@ -58,10 +58,17 @@ int main(int argc, char **argv) {
 	}
 
 	Map map = {
-		.obstacle = SYMBOL_OBSTACLE,
-		.coin = SYMBOL_COIN,
-		.exit = SYMBOL_EXIT,
+		.obstacle = OBSTACLE,
+		.coin = COIN,
+		.exit = EXIT,
 		.collisions = COLLISIONS
+	};
+
+	Player player = {
+		.symbol = PLAYER, .score = SCORE,
+		.obstacle_loss = OBSTACLE_LOSS,
+		.step_loss = STEP_LOSS,
+		.coin_gain = COIN_GAIN
 	};
 
 	if (!ai_mode) {
@@ -72,7 +79,7 @@ int main(int argc, char **argv) {
 		map_from_stdin(&map, columns, rows);
 	}
 
-	Player player = player_retrieve(map, SYMBOL_PLAYER);
+	player_retrieve(&player, map);
 
 	if (!ai_mode) {
 		mode_interactive(player, map);

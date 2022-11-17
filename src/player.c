@@ -5,19 +5,15 @@
 #include "map.h"
 #include "player.h"
 
-Player player_retrieve(Map map, char symbol) {
-	Player player = {.symbol = symbol, .score = 0};
-
+void player_retrieve(Player *player, Map map) {
 	MAP_ITERATE(map, i, x, y) {
-		if (map.map[i] == symbol) {
+		if (map.map[i] == player->symbol) {
 			map.map[i] = ' ';
-			player.x = x;
-			player.y = y;
+			player->x = x;
+			player->y = y;
 			break;
 		}
 	}
-
-	return player;
 }
 
 //! @details La funzione contiene le regole che aggiornano il punteggio del
@@ -48,15 +44,15 @@ bool player_step(Player *player, long dx, long dy, Map map) {
 	// Aggiorna lo score del giocatore in base al contenuto della mappa
 	char *cell = map_at(map, x, y);
 	if (*cell == map.obstacle) {
-		if (player->score < 0) {
-			player->score *= 2;
-		} else {
-			player->score /= 2;
+		double loss = player->obstacle_loss;
+		if (player->score > 0) {
+			loss = 1.0/loss;
 		}
+		player->score *= loss;
 	} else if (*cell == map.coin) {
-		player->score += 3;
+		player->score += player->coin_gain;
 	} else if (*cell == ' ') {
-		player->score--;
+		player->score -= player->step_loss;
 	}
 
 	return true;
