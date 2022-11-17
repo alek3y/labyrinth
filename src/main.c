@@ -25,8 +25,8 @@
 //! Il **miglior percorso** rappresenta la distanza percorsa minore dall'uscita
 //! e i punti moneta accumulati (rappresentate da `$`) maggiori possibili.
 //!
-//! Se il giocatore dovesse passare per un **imprevisto** (rappresentato da `!`), gli
-//! verranno dimezzati i punti moneta.
+//! Se il giocatore dovesse passare per un **imprevisto** (rappresentato da `!`),
+//! gli verranno dimezzati i punti moneta.
 
 //! @file main.c
 //! @brief Logica di gioco principale.

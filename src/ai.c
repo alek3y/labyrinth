@@ -112,7 +112,7 @@ Steps ai_steps(Player source, Map map) {
 			}
 		}
 
-		// Imposta il nodo trovato come visistato
+		// Imposta il nodo trovato come visitato
 		distances[visiting].visited = true;
 	}
 
@@ -128,7 +128,7 @@ Steps ai_steps(Player source, Map map) {
 	steps.steps = malloc(steps.length * sizeof(*steps.steps));	// Adatta la lista di step
 	for (size_t i = 0; i < steps.length-1; i++) {
 		visiting = distances[visiting].previous;
-		steps.steps[steps.length-i-2] = visiting;	// Metti gli indici pardendo dal penultimo step
+		steps.steps[steps.length-i-2] = visiting;	// Metti gli indici partendo dal penultimo step
 	}
 	steps.steps[steps.length-1] = target;
 

@@ -5,7 +5,7 @@
 #include <assert.h>
 #include "map.h"
 
-//! @details Perchè la lettura funzioni, deve essere presente un
+//! @details Perché la lettura funzioni, deve essere presente un
 //! '\\n' su ogni riga della mappa (inclusa l'ultima).
 void map_from_str(Map *map, char *level) {
 	assert(map != NULL && level != NULL);
