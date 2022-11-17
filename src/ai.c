@@ -63,7 +63,9 @@ Steps ai_steps(Player source, Map map) {
 			distances[i].visited = true;
 		}
 	}
-	distances[source.y * map.columns + source.x].distance = 0;	// Il giocatore è il primo nodo da visitare
+
+	// Imposta il giocatore come primo nodo da visitare
+	distances[source.y * map.columns + source.x].distance = source.score;
 
 	struct Neighbor neighbors[4];	// Alloca lo spazio per salvare i vicini
 	for (size_t k = 0; k < map.rows * map.columns; k++) {	// Il totale di nodi da visitare è la cardinalità del grafo
@@ -90,11 +92,10 @@ Steps ai_steps(Player source, Map map) {
 				continue;
 			}
 
-			Player from_visiting = {
-				.x = visiting % map.columns,
-				.y = visiting / map.columns,
-				.score = distances[visiting].distance
-			};
+			Player from_visiting = source;
+			from_visiting.x = visiting % map.columns;
+			from_visiting.y = visiting / map.columns;
+			from_visiting.score = distances[visiting].distance;
 
 			long distance = from_visiting.score;
 			player_step(

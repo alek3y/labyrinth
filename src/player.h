@@ -13,9 +13,7 @@
 typedef struct {
 	char symbol;
 	size_t x, y;
-	long score;
-	double obstacle_loss;
-	long step_loss, coin_gain;
+	long score, obstacle_loss, coin_gain, step_loss;
 } Player;
 
 //! @brief Genera il giocatore e rimuove il simbolo corrispondente dalla mappa.
