@@ -37,6 +37,7 @@
 #include "term.h"
 #include "map.h"
 #include "player.h"
+#include "ai.h"
 #include "util.h"
 #include "config.h"
 
