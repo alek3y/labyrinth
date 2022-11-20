@@ -130,24 +130,12 @@ void mode_interactive(Player player, Map map) {
 
 			// TODO: Se la mappa è troppo piccola non tutti i testi si vedono
 			if (x + 1 >= map.columns) {
-				switch (y) {
-					case 1:
-						printf_clean("%s   Score: %ld", map_row, player.score);
-						break;
-					case 3:
-						printf_clean("%s   Controlli:", map_row);
-						break;
-					case 5:
-
-						// TODO: La freccia non è supportata su cmd.exe
-						printf_clean("%s         %c (↑)", map_row, KEY_UP);
-						break;
-					case 6:
-						printf_clean("%s   %c (←) %c (↓) %c (→)", map_row, KEY_LEFT, KEY_DOWN, KEY_RIGHT);
-						break;
-					default:
-						printf_clean("%s", map_row);
+				if (y == 1) {
+					printf_clean("%s  Score: %ld", map_row, player.score);
+				} else {
+					printf_clean("%s", map_row);
 				}
+
 				printf("\n");
 			}
 		}
