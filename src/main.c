@@ -51,10 +51,13 @@ void mode_ai(Player player, Map map);
 
 //! @brief Entry del programma con l'inizializzazione della mappa.
 int main(int argc, char **argv) {
+	char *map_file = NULL;
 	bool ai_mode = false;
-	for (int i = 0; i < argc; i++) {
+	for (int i = 1; i < argc; i++) {
 		if (strcmp(argv[i], "--challenge") == 0) {
 			ai_mode = true;
+		} else {
+			map_file = argv[i];
 		}
 	}
 
@@ -72,12 +75,16 @@ int main(int argc, char **argv) {
 		.coin = COIN_GAIN
 	};
 
-	if (!ai_mode) {
-		map_from_str(&map, DEFAULT_LEVEL);
-	} else {
+	if (map_file != NULL) {
+		FILE *file = fopen(map_file, "r");
+		map_from_file(&map, file);
+		fclose(file);
+	} else if (ai_mode) {
 		size_t columns, rows;
 		scanf("%lu\n%lu\n", &columns, &rows);
 		map_from_stdin(&map, columns, rows);
+	} else {
+		map_from_str(&map, DEFAULT_LEVEL);
 	}
 
 	player_retrieve(&player, map);
