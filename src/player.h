@@ -11,9 +11,9 @@
 //! e i valori associati al cambio punti durante lo step.
 typedef struct {
 	char symbol;
-	long x, y;
-	long score;
-	long obstacle, coin, step;
+	long x, y, score;
+	long obstacle, coin, drill;
+	size_t drillables;
 } Player;
 
 //! @brief Genera il giocatore e rimuove il simbolo corrispondente dalla mappa.

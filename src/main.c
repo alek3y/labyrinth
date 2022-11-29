@@ -62,17 +62,18 @@ int main(int argc, char **argv) {
 	}
 
 	Map map = {
-		.obstacle = OBSTACLE,
-		.coin = COIN,
-		.exit = EXIT,
-		.collisions = COLLISIONS
+		.exit = EXIT, .collisions = COLLISIONS,
+		.coin = ITEM_COIN_SYMBOL,
+		.obstacle = ITEM_OBSTACLE_SYMBOL,
+		.drill = ITEM_DRILL_SYMBOL,
 	};
 
 	Player player = {
 		.symbol = PLAYER, .score = SCORE,
-		.obstacle = OBSTACLE_LOSS,
-		.step = STEP_LOSS,
-		.coin = COIN_GAIN
+		.coin = ITEM_COIN_VALUE,
+		.obstacle = ITEM_OBSTACLE_VALUE,
+		.drill = ITEM_DRILL_VALUE,
+		.drillables = 0
 	};
 
 	if (map_file != NULL) {

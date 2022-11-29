@@ -9,8 +9,9 @@
 //! @brief Struttura contenente le informazioni della mappa.
 typedef struct {
 	char *map;
-	char obstacle, coin, exit, *collisions;
 	size_t rows, columns;
+	char obstacle, coin, drill, exit;
+	char *collisions;
 } Map;
 
 //! @brief Espande in un for loop per iterare le celle della mappa.

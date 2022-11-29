@@ -35,7 +35,11 @@ bool player_step(Player *player, long dx, long dy, Map map) {
 	// Collisioni in base al contenuto della cella
 	char *cell = map_at(map, x, y);
 	if (strchr(map.collisions, *cell) != NULL) {
-		return false;
+		if (player->drillables == 0) {
+			return false;
+		} else {
+			player->drillables--;	// Trapassa il muro
+		}
 	}
 
 	// Aggiorna lo score del giocatore in base al contenuto della mappa
@@ -47,8 +51,11 @@ bool player_step(Player *player, long dx, long dy, Map map) {
 		}
 	} else if (*cell == map.coin) {
 		player->score += player->coin;
-	} else if (*cell == ' ') {
-		player->score -= player->step;
+	} else {
+		if (*cell == map.drill) {
+			player->drillables += player->drill;
+		}
+		player->score--;
 	}
 
 	player->x = x;
