@@ -44,10 +44,10 @@
 #include "config.h"
 
 //! @brief Loop di gioco principale per la modalità interattiva.
-void mode_interactive(Player player, Map map);
+int mode_interactive(Player player, Map map);
 
 //! @brief Logica per l'elaborazione del percorso migliore.
-void mode_ai(Player player, Map map);
+int mode_ai(Player player, Map map);
 
 //! @brief Entry del programma con l'inizializzazione della mappa.
 int main(int argc, char **argv) {
@@ -77,6 +77,11 @@ int main(int argc, char **argv) {
 
 	if (map_file != NULL) {
 		FILE *file = fopen(map_file, "r");
+		if (file == NULL) {
+			fprintf(stderr, "Errore: impossibile trovare il file specificato\n");
+			return 1;
+		}
+
 		map_from_file(&map, file);
 		fclose(file);
 	} else if (ai_mode) {
@@ -89,17 +94,18 @@ int main(int argc, char **argv) {
 
 	player_retrieve(&player, map);
 
+	int status;
 	if (!ai_mode) {
-		mode_interactive(player, map);
+		status = mode_interactive(player, map);
 	} else {
-		mode_ai(player, map);
+		status = mode_ai(player, map);
 	}
 
 	map_free(&map);
-	return 0;
+	return status;
 }
 
-void mode_ai(Player player, Map map) {
+int mode_ai(Player player, Map map) {
 
 		// La lunghezza massima dei percorsi non ciclici è rows * columns
 		long *best_path = calloc(map.rows * map.columns, sizeof(*best_path));
@@ -163,13 +169,15 @@ void mode_ai(Player player, Map map) {
 			printf("\n");
 		} else {
 			fprintf(stderr, "Errore: impossibile trovare un percorso per l'uscita\n");
+			return 1;
 		}
 
 		free(path);
 		free(best_path);
+		return 0;
 }
 
-void mode_interactive(Player player, Map map) {
+int mode_interactive(Player player, Map map) {
 	bool should_quit = false;
 	while (true) {
 		char map_row[map.columns + 1];	// TODO: Malloc?
@@ -241,4 +249,6 @@ void mode_interactive(Player player, Map map) {
 
 		term_cursor_move(-map.rows, 0);
 	}
+
+	return 0;
 }
