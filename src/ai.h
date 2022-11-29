@@ -4,7 +4,6 @@
 #ifndef AI_H
 #define AI_H
 
-#include <stdio.h>
 #include "map.h"
 #include "player.h"
 

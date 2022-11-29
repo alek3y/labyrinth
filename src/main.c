@@ -67,9 +67,9 @@ int main(int argc, char **argv) {
 
 	Player player = {
 		.symbol = PLAYER, .score = SCORE,
-		.obstacle_loss = OBSTACLE_LOSS,
-		.step_loss = STEP_LOSS,
-		.coin_gain = COIN_GAIN
+		.obstacle = OBSTACLE_LOSS,
+		.step = STEP_LOSS,
+		.coin = COIN_GAIN
 	};
 
 	if (!ai_mode) {
@@ -122,7 +122,7 @@ void mode_interactive(Player player, Map map) {
 		map_row[map.columns] = '\0';
 
 		MAP_ITERATE(map, i, x, y) {
-			if (x == player.x && y == player.y) {
+			if ((long) x == player.x && (long) y == player.y) {
 				map_row[x] = player.symbol;
 			} else {
 				map_row[x] = map.map[i];

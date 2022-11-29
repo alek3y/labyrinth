@@ -4,7 +4,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <stdio.h>
 #include <stdbool.h>
 #include "map.h"
 
@@ -12,8 +11,9 @@
 //! e i valori associati al cambio punti durante lo step.
 typedef struct {
 	char symbol;
-	size_t x, y;
-	long score, obstacle_loss, coin_gain, step_loss;
+	long x, y;
+	long score;
+	long obstacle, coin, step;
 } Player;
 
 //! @brief Genera il giocatore e rimuove il simbolo corrispondente dalla mappa.
