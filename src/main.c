@@ -102,11 +102,11 @@ int main(int argc, char **argv) {
 void mode_ai(Player player, Map map) {
 
 		// La lunghezza massima dei percorsi non ciclici è rows * columns
-		bool *best_path = calloc(map.rows * map.columns, sizeof(*best_path));
-		bool *path = calloc(map.rows * map.columns, sizeof(*path));
+		long *best_path = calloc(map.rows * map.columns, sizeof(*best_path));
+		long *path = calloc(map.rows * map.columns, sizeof(*path));
 
 		// Evita di ricontrollare la posizione iniziale del giocatore
-		path[player.y * map.columns + player.x] = true;
+		path[player.y * map.columns + player.x] = 1;
 
 		long best_score = LONG_MIN;	// Il migliore ha il punteggio più alto
 		ai_find(player, map, path, best_path, &best_score);
@@ -116,21 +116,49 @@ void mode_ai(Player player, Map map) {
 
 			long visiting = player.y * map.columns + player.x;
 			while (map.map[visiting] != map.exit) {
-				best_path[visiting] = false;
+				best_path[visiting] = 0;
 
-				if (visiting - (long) map.columns >= 0 && best_path[visiting - map.columns]) {
-					printf("%c", KEY_UP);
-					visiting -= map.columns;
-				} else if (visiting + map.columns < map.rows*map.columns && best_path[visiting + map.columns]) {
-					printf("%c", KEY_DOWN);
-					visiting += map.columns;
-				} else if (visiting % map.columns > 0 && best_path[visiting - 1]) {
-					printf("%c", KEY_LEFT);
-					visiting--;
-				} else if (visiting % map.columns < map.columns-1 && best_path[visiting + 1]) {
-					printf("%c", KEY_RIGHT);
-					visiting++;
+				long neighbors[] = {
+					visiting - map.columns, visiting + map.columns,
+					visiting - 1, visiting + 1
+				};
+
+				size_t next;
+				bool found_next = false;
+				for (size_t n = 0; n < 4; n++) {
+					long x = neighbors[n] % map.columns, y = neighbors[n] / map.columns;
+					if (x < 0 || y < 0 || x >= (long) map.columns || y >= (long) map.rows) {
+						continue;
+					}
+
+					// Ignora i vicini che non sono nel percorso
+					if (best_path[neighbors[n]] == 0) {
+						continue;
+					}
+
+					// Cerca il vicino successivo
+					if (!found_next || best_path[neighbors[n]] < best_path[neighbors[next]]) {
+						next = n;
+						found_next = true;
+					}
 				}
+
+				switch (next) {
+					case 0:
+						printf("%c", KEY_UP);
+						break;
+					case 1:
+						printf("%c", KEY_DOWN);
+						break;
+					case 2:
+						printf("%c", KEY_LEFT);
+						break;
+					case 3:
+						printf("%c", KEY_RIGHT);
+						break;
+				}
+
+				visiting = neighbors[next];
 			}
 			printf("\n");
 		} else {

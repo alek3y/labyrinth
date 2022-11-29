@@ -9,7 +9,7 @@
 // TODO:
 // - Diminuire il peso sullo stack usando puntatori per Player e Map?
 // - Ottimizzare (?) facendo una BFS su ogni nodo per evitare le ricerche dentro i vicoli ciechi
-long ai_find(Player source, Map map, bool *path, bool *best_path, long *best_score) {
+long ai_find(Player source, Map map, long *path, long *best_path, long *best_score) {
 	if (*map_at(map, source.x, source.y) == map.exit) {
 		if (source.score > *best_score) {
 			*best_score = source.score;
@@ -25,16 +25,17 @@ long ai_find(Player source, Map map, bool *path, bool *best_path, long *best_sco
 	for (size_t i = 0; i < 4; i++) {
 		Player player = source;
 		if (player_step(&player, neighbors[i][0], neighbors[i][1], map)) {
-			bool *cell = &path[player.y * map.columns + player.x];
+			long *cell = &path[player.y * map.columns + player.x];
 
 			// Ignora le celle già visitate
-			if (*cell) {
+			if (*cell > 0) {
 				continue;
 			}
 
-			*cell = true;	// Segna come visitata in modo da non tornare indietro
+
+			*cell = path[source.y * map.columns + source.x] + 1;	// Segna come visitata
 			long score = ai_find(player, map, path, best_path, best_score);
-			*cell = false;
+			*cell = 0;
 
 			if (score > best) {
 				best = score;
