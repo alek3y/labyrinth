@@ -35,6 +35,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 #include "term.h"
 #include "map.h"
 #include "player.h"
@@ -92,27 +93,26 @@ int main(int argc, char **argv) {
 }
 
 void mode_ai(Player player, Map map) {
-	Steps steps = ai_steps(player, map);
 
-	char *moves = calloc(steps.length + 1, 1);
-	for (size_t i = 1; i < steps.length; i++) {
-		size_t previous = steps.steps[i-1], current = steps.steps[i];
+		// La lunghezza massima dei percorsi non ciclici è rows * columns
+		bool *best_path = calloc(map.rows * map.columns, sizeof(*best_path));
+		bool *path = calloc(map.rows * map.columns, sizeof(*path));
 
-		if (current == previous - map.columns) {
-			moves[i-1] = KEY_UP;
-		} else if (current == previous + map.columns) {
-			moves[i-1] = KEY_DOWN;
-		} else if (current == previous - 1) {
-			moves[i-1] = KEY_LEFT;
-		} else if (current == previous + 1) {
-			moves[i-1] = KEY_RIGHT;
+		// Evita di ricontrollare la posizione iniziale del giocatore
+		size_t source = player.y * map.columns + player.x;
+		path[source] = true;
+
+		long best_score = LONG_MIN;	// Il migliore ha il punteggio più alto
+		ai_find(player, map, path, best_path, &best_score);
+
+		if (best_score > LONG_MIN) {
+			printf("Score: %ld\n", best_score);	// DEBUG
+		} else {
+			fprintf(stderr, "Errore: impossibile trovare un percorso per l'uscita\n");
 		}
-	}
 
-	printf("%s\n", moves);
-
-	free(moves);
-	ai_free(&steps);
+		free(path);
+		free(best_path);
 }
 
 void mode_interactive(Player player, Map map) {
@@ -128,7 +128,6 @@ void mode_interactive(Player player, Map map) {
 				map_row[x] = map.map[i];
 			}
 
-			// TODO: Se la mappa è troppo piccola non tutti i testi si vedono
 			if (x + 1 >= map.columns) {
 				if (y == 1) {
 					printf_clean("%s  Score: %ld", map_row, player.score);

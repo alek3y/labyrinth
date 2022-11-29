@@ -8,20 +8,12 @@
 #include "map.h"
 #include "player.h"
 
-//! @brief Struttura contenente la lista di passaggi
-//! fatti dall'AI per arrivare all'uscita.
-typedef struct {
-	size_t *steps;
-	size_t length;
-} Steps;
-
-//! @brief Genera le mosse dell'AI partendo dalla posizione del giocatore..
-//! @param source Stato iniziale del giocatore da cui partire.
-//! @param map Mappa da attraversare.
-//! @return La lista degli indici dei nodi che sono stati attraversati.
-Steps ai_steps(Player source, Map map);
-
-//! @brief Libera la memoria occupata dagli step dell'AI.
-void ai_free(Steps *steps);
+//! @brief Trova il percorso migliore dal giocatore all'uscita
+//! @param player Giocatore da cui cominciare la ricerca
+//! @param map Mappa su cui effettuare la ricerca
+//! @param path Buffer ausiliare lungo `map.rows * map.columns` per i nodi visitati
+//! @param best_path Buffer ausiliare su cui ci sono i nodi visitati del percorso migliore
+//! @param best_score Score percorso migliore (inizialmente `LONG_MIN`)
+long ai_find(Player player, Map map, bool *path, bool *best_path, long *best_score);
 
 #endif
