@@ -118,8 +118,6 @@ int mode_ai(Player player, Map map) {
 		ai_find(player, map, path, best_path, &best_score);
 
 		if (best_score > LONG_MIN) {
-			printf("Score: %ld\n", best_score);	// DEBUG
-
 			long visiting = player.y * map.columns + player.x;
 			while (map.map[visiting] != map.exit) {
 				best_path[visiting] = 0;
