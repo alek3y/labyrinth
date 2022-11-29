@@ -99,14 +99,33 @@ void mode_ai(Player player, Map map) {
 		bool *path = calloc(map.rows * map.columns, sizeof(*path));
 
 		// Evita di ricontrollare la posizione iniziale del giocatore
-		size_t source = player.y * map.columns + player.x;
-		path[source] = true;
+		path[player.y * map.columns + player.x] = true;
 
 		long best_score = LONG_MIN;	// Il migliore ha il punteggio più alto
 		ai_find(player, map, path, best_path, &best_score);
 
 		if (best_score > LONG_MIN) {
 			printf("Score: %ld\n", best_score);	// DEBUG
+
+			long visiting = player.y * map.columns + player.x;
+			while (map.map[visiting] != map.exit) {
+				best_path[visiting] = false;
+
+				if (visiting - (long) map.columns >= 0 && best_path[visiting - map.columns]) {
+					printf("%c", KEY_UP);
+					visiting -= map.columns;
+				} else if (visiting + map.columns < map.rows*map.columns && best_path[visiting + map.columns]) {
+					printf("%c", KEY_DOWN);
+					visiting += map.columns;
+				} else if (visiting % map.columns > 0 && best_path[visiting - 1]) {
+					printf("%c", KEY_LEFT);
+					visiting--;
+				} else if (visiting % map.columns < map.columns-1 && best_path[visiting + 1]) {
+					printf("%c", KEY_RIGHT);
+					visiting++;
+				}
+			}
+			printf("\n");
 		} else {
 			fprintf(stderr, "Errore: impossibile trovare un percorso per l'uscita\n");
 		}
