@@ -33,7 +33,7 @@ bool player_step(Player *player, long dx, long dy, Map map) {
 	}
 
 	// Collisioni in base al contenuto della cella
-	char *cell = map_at(map, x, y);
+	char *cell = &map.map[y * map.columns + x];
 	if (strchr(map.collisions, *cell) != NULL) {
 		if (player->drillables == 0) {
 			return false;
