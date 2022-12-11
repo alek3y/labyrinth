@@ -51,12 +51,10 @@ bool player_step(Player *player, long dx, long dy, Map map) {
 		}
 	} else if (*cell == map.coin) {
 		player->score += player->coin;
-	} else {
-		if (*cell == map.drill) {
-			player->drillables += player->drill;
-		}
-		player->score--;
+	} else if (*cell == map.drill) {
+		player->drillables += player->drill;
 	}
+	player->score--;
 
 	player->x = x;
 	player->y = y;
