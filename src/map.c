@@ -21,7 +21,7 @@ void map_from_str(Map *map, char *level) {
 		map->rows++;
 	}
 
-	map->map = calloc(map->rows * map->columns, 1);
+	map->map = calloc(map->rows * map->columns + 1, 1);
 	head = level;
 	while ((tail = strchr(head, '\n')) != NULL) {
 		size_t row_len = tail - head;

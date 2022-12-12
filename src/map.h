@@ -20,11 +20,11 @@ typedef struct {
 //! @param x Indice della colonna assegnata ad ogni iterazione.
 //! @param y Indice della riga assegnata ad ogni iterazione.
 #define MAP_ITERATE(map, i, x, y) \
-for ( \
-	size_t i = 0, x = 0, y = 0; \
-	i < (map).rows * (map).columns; \
-	i++, x = i % (map).columns, y = i / (map).columns \
-)
+	for ( \
+		size_t i = 0, x = 0, y = 0; \
+		i < (map).rows * (map).columns; \
+		i++, x = i % (map).columns, y = i / (map).columns \
+	)
 
 //! @brief Carica la mappa dal file `level` sulla struttura `map`.
 void map_from_file(Map *map, FILE *level);
