@@ -4,27 +4,28 @@
 #include "term.h"
 #include "util.h"
 
-//! @details Non conoscendo la posizione orizzontale del cursore la stampa
-//! viene effettuata all'inzio della riga con '\\r'.
-int printf_clean(char *format, ...) {
-	printf("\r");
-
+//! @details Non conoscendo la posizione orizzontale del cursore
+//! l'offset va specificato manualmente.
+int printf_clean(unsigned int offset, char *format, ...) {
 	va_list arguments;
 	va_start(arguments, format);
-	int bytes_written = vprintf(format, arguments);
+	int written = vprintf(format, arguments);
 	va_end(arguments);
 
-	unsigned int columns = term_width() - 1;
-	if (bytes_written >= 0 && (size_t) bytes_written <= columns) {
-		size_t empty_len = columns - bytes_written;
+	if (written >= 0) {
+		unsigned int cursor = written + offset;
+		unsigned int columns = term_width() - 1;
+		if (cursor <= columns) {
+			unsigned int empty_len = columns - cursor;
 
-		char empty[empty_len + 1];
-		memset(empty, ' ', empty_len);
-		empty[empty_len] = 0;
+			char empty[empty_len + 1];
+			memset(empty, ' ', empty_len);
+			empty[empty_len] = 0;
 
-		printf("%s", empty);
-		term_cursor_move(0, -empty_len);
+			printf("%s", empty);
+			term_cursor_move(0, -empty_len);
+		}
 	}
 
-	return bytes_written;
+	return written;
 }

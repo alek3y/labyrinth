@@ -73,7 +73,8 @@ int main(int argc, char **argv) {
 		.coin = ITEM_COIN_VALUE,
 		.obstacle = ITEM_OBSTACLE_VALUE,
 		.drill = ITEM_DRILL_VALUE,
-		.drillables = 0
+		.drillables = 0,
+		.tail = NULL	// La coda viene abilitata in modalità interattiva
 	};
 
 	if (map_file != NULL) {
@@ -97,7 +98,10 @@ int main(int argc, char **argv) {
 
 	int status;
 	if (!ai_mode) {
+		Tail tail = tail_new();
+		player.tail = &tail;
 		status = mode_interactive(player, map);
+		tail_free(&tail);
 	} else {
 		status = mode_ai(player, map);
 	}
@@ -179,21 +183,32 @@ int mode_ai(Player player, Map map) {
 int mode_interactive(Player player, Map map) {
 	bool should_quit = false;
 	while (true) {
-		char map_row[map.columns + 1];	// TODO: Malloc?
-		map_row[map.columns] = '\0';
-
 		MAP_ITERATE(map, i, x, y) {
 			if ((long) x == player.x && (long) y == player.y) {
-				map_row[x] = player.symbol;
+				putchar(player.symbol);
 			} else {
-				map_row[x] = map.map[i];
+				bool is_tail = false;
+
+				Tail *next = player.tail;
+				while ((next = next->next) != NULL) {
+					if ((long) x == next->x && (long) y == next->y) {
+						is_tail = true;
+						break;
+					}
+				}
+
+				if (is_tail) {
+					printf("°");
+				} else {
+					putchar(map.map[i]);
+				}
 			}
 
 			if (x + 1 >= map.columns) {
 				if (y == 1) {
-					printf_clean("%s  Score: %ld", map_row, player.score);
+					printf_clean(map.columns, "  Score: %ld", player.score);
 				} else {
-					printf_clean("%s", map_row);
+					printf_clean(map.columns, "");
 				}
 
 				printf("\n");
@@ -231,7 +246,7 @@ int mode_interactive(Player player, Map map) {
 		}
 
 		if (should_quit) {
-			printf_clean("\r");
+			printf_clean(0, "\r");
 			printf("\n");
 			break;
 		}

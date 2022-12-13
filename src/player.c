@@ -4,6 +4,64 @@
 #include "map.h"
 #include "player.h"
 
+Tail tail_new() {
+	return (Tail) {0};
+}
+
+Tail *tail_get(Tail tail, size_t index) {
+	assert(index < tail.length);
+
+	Tail *first = tail.next;
+	for (size_t i = 0; i < index; i++) {
+		first = first->next;
+	}
+	return first;
+}
+
+void tail_insert(Tail *tail, size_t index, long x, long y) {
+	assert(tail != NULL);
+	assert(index <= tail->length);
+
+	Tail *new = calloc(1, sizeof(*new));
+	new->x = x;
+	new->y = y;
+
+	if (index == 0) {
+		new->next = tail->next;
+		tail->next = new;
+	} else {
+		Tail *previous = tail_get(*tail, index-1);
+		new->next = previous->next;
+		previous->next = new;
+	}
+	tail->length++;
+}
+
+void tail_cut(Tail *tail, size_t index) {
+	assert(tail != NULL);
+	assert(index < tail->length);
+
+	if (index == 0) {
+		tail_free(tail);
+	} else {
+		tail_free(tail_get(*tail, index-1));
+		tail->length = index;
+	}
+}
+
+void tail_free(Tail *tail) {
+	assert(tail != NULL);
+
+	Tail *previous, *next = tail->next;
+	while (next != NULL) {
+		previous = next;
+		next = next->next;
+		free(previous);
+	}
+	tail->next = NULL;
+	tail->length = 0;
+}
+
 void player_retrieve(Player *player, Map map) {
 	MAP_ITERATE(map, i, x, y) {
 		if (map.map[i] == player->symbol) {
@@ -42,8 +100,12 @@ bool player_step(Player *player, long dx, long dy, Map map) {
 		}
 	}
 
+	// TODO: Collisioni con il corpo del serpente
+
 	// Aggiorna lo score del giocatore in base al contenuto della mappa
-	if (*cell == map.obstacle) {
+	if (*cell == map.drill) {
+		player->drillables += player->drill;
+	} else if (*cell == map.obstacle) {
 		if (player->score < 0) {
 			player->score *= player->obstacle;
 		} else {
@@ -51,8 +113,14 @@ bool player_step(Player *player, long dx, long dy, Map map) {
 		}
 	} else if (*cell == map.coin) {
 		player->score += player->coin;
-	} else if (*cell == map.drill) {
-		player->drillables += player->drill;
+		if (player->tail != NULL) {
+			tail_insert(player->tail, 0, player->x, player->y);
+		}
+	} else if (player->tail != NULL && player->tail->length > 0) {
+
+		// FIXME: Ogni step chiama un malloc() e un free()
+		tail_cut(player->tail, player->tail->length-1);
+		tail_insert(player->tail, 0, player->x, player->y);
 	}
 	player->score--;
 

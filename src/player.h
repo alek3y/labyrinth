@@ -7,6 +7,30 @@
 #include <stdbool.h>
 #include "map.h"
 
+//! @brief Lista dinamica che rappresenta la coda del giocatore:
+typedef struct Tail {
+	long x, y;
+	size_t length;
+	struct Tail *next;
+} Tail;
+
+//! @brief Inizializza la struttura vuota.
+Tail tail_new();
+
+//! @brief Restituisce il nodo all'indice `index`.
+Tail *tail_get(Tail tail, size_t index);
+
+//! @brief Inizializza un nuovo nodo in posizione `index`
+//! contenente i dati `x` e `y`.
+void tail_insert(Tail *tail, size_t index, long x, long y);
+
+//! @brief Taglia e libera la memoria occupata dalla coda
+//! partendo dall'indice `index`.
+void tail_cut(Tail *tail, size_t index);
+
+//! @brief Libera dalla memoria l'intera coda.
+void tail_free(Tail *tail);
+
 //! @brief Struttura contenente le informazioni del giocatore
 //! e i valori associati al cambio punti durante lo step.
 typedef struct {
@@ -14,6 +38,7 @@ typedef struct {
 	long x, y, score;
 	long obstacle, coin, drill;
 	size_t drillables;
+	Tail *tail;
 } Player;
 
 //! @brief Genera il giocatore e rimuove il simbolo corrispondente dalla mappa.
