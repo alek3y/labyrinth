@@ -186,22 +186,10 @@ int mode_interactive(Player player, Map map) {
 		MAP_ITERATE(map, i, x, y) {
 			if ((long) x == player.x && (long) y == player.y) {
 				putchar(player.symbol);
+			} else if (tail_find(player.tail, x, y, NULL) != NULL) {
+				printf("°");
 			} else {
-				bool is_tail = false;
-
-				Tail *next = player.tail;
-				while ((next = next->next) != NULL) {
-					if ((long) x == next->x && (long) y == next->y) {
-						is_tail = true;
-						break;
-					}
-				}
-
-				if (is_tail) {
-					printf("°");
-				} else {
-					putchar(map.map[i]);
-				}
+				putchar(map.map[i]);
 			}
 
 			if (x + 1 >= map.columns) {

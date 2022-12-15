@@ -18,6 +18,25 @@ Tail *tail_get(Tail tail, size_t index) {
 	return first;
 }
 
+Tail *tail_find(Tail *tail, long x, long y, size_t *index) {
+	assert(tail != NULL);
+
+	size_t i = 0;
+	Tail *next = tail, *found = NULL;
+	while ((next = next->next) != NULL) {
+		if (x == next->x && y == next->y) {
+			found = next;
+			break;
+		}
+		i++;
+	}
+
+	if (index != NULL && found != NULL) {
+		*index = i;
+	}
+	return found;
+}
+
 void tail_insert(Tail *tail, size_t index, long x, long y) {
 	assert(tail != NULL);
 	assert(index <= tail->length);
@@ -100,8 +119,6 @@ bool player_step(Player *player, long dx, long dy, Map map) {
 		}
 	}
 
-	// TODO: Collisioni con il corpo del serpente
-
 	// Aggiorna lo score del giocatore in base al contenuto della mappa
 	if (*cell == map.drill) {
 		player->drillables += player->drill;
@@ -116,14 +133,25 @@ bool player_step(Player *player, long dx, long dy, Map map) {
 		if (player->tail != NULL) {
 			tail_insert(player->tail, 0, player->x, player->y);
 		}
-	} else if (player->tail != NULL && player->tail->length > 0) {
+	} else if (player->tail != NULL) {
 
-		// FIXME: Ogni step chiama un malloc() e un free()
-		tail_cut(player->tail, player->tail->length-1);
-		tail_insert(player->tail, 0, player->x, player->y);
+		// Sposta la coda di una cella
+		if (player->tail->length > 0) {
+
+			// FIXME: Ogni step chiama un malloc() e un free()
+			tail_cut(player->tail, player->tail->length-1);
+			tail_insert(player->tail, 0, player->x, player->y);
+		}
+
+		// Taglia la coda se il player ci collide
+		size_t index;
+		if (tail_find(player->tail, x, y, &index) != NULL) {
+			player->score -= player->coin * (player->tail->length - index);
+			tail_cut(player->tail, index);
+		}
 	}
-	player->score--;
 
+	player->score--;
 	player->x = x;
 	player->y = y;
 	return true;

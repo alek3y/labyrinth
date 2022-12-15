@@ -7,7 +7,7 @@
 #include <stdbool.h>
 #include "map.h"
 
-//! @brief Lista dinamica che rappresenta la coda del giocatore:
+//! @brief Lista dinamica che rappresenta la coda del giocatore.
 typedef struct Tail {
 	long x, y;
 	size_t length;
@@ -19,6 +19,10 @@ Tail tail_new();
 
 //! @brief Restituisce il nodo all'indice `index`.
 Tail *tail_get(Tail tail, size_t index);
+
+//! @brief Cerca il nodo contenente i valori `x` e `y` e ne
+//! salva l'indice su `index`.
+Tail *tail_find(Tail *tail, long x, long y, size_t *index);
 
 //! @brief Inizializza un nuovo nodo in posizione `index`
 //! contenente i dati `x` e `y`.
