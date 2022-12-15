@@ -119,16 +119,7 @@ bool player_step(Player *player, long dx, long dy, Map map) {
 		}
 	}
 
-	// Aggiorna lo score del giocatore in base al contenuto della mappa
-	if (*cell == map.drill) {
-		player->drillables += player->drill;
-	} else if (*cell == map.obstacle) {
-		if (player->score < 0) {
-			player->score *= player->obstacle;
-		} else {
-			player->score /= player->obstacle;
-		}
-	} else if (*cell == map.coin) {
+	if (*cell == map.coin) {
 		player->score += player->coin;
 		if (player->tail != NULL) {
 			tail_insert(player->tail, 0, player->x, player->y);
@@ -148,6 +139,21 @@ bool player_step(Player *player, long dx, long dy, Map map) {
 		if (tail_find(player->tail, x, y, &index) != NULL) {
 			player->score -= player->coin * (player->tail->length - index);
 			tail_cut(player->tail, index);
+		}
+	}
+
+	if (*cell == map.drill) {
+		player->drillables += player->drill;
+	} else if (*cell == map.obstacle) {
+		if (player->score < 0) {
+			player->score *= player->obstacle;
+		} else {
+			player->score /= player->obstacle;
+		}
+
+		// Taglia a metà la coda nell'imprevisto
+		if (player->tail != NULL) {
+			tail_cut(player->tail, player->tail->length/2);
 		}
 	}
 
