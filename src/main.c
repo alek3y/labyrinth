@@ -187,7 +187,7 @@ int mode_interactive(Player player, Map map) {
 			if ((long) x == player.x && (long) y == player.y) {
 				putchar(player.symbol);
 			} else if (tail_find(player.tail, x, y, NULL) != NULL) {
-				printf("°");
+				printf("°");	// FIXME: Non viene disegnato correttamente su cmd.exe
 			} else {
 				putchar(map.map[i]);
 			}
