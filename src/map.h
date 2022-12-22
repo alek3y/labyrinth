@@ -35,9 +35,8 @@ void map_from_str(Map *map, char *level);
 //! @brief Carica la mappa dallo _standard input_ sulla struttura `map`.
 void map_from_stdin(Map *map, size_t columns, size_t rows);
 
-//! @brief Trova la cella sulla mappa.
-//! @return Un puntatore alla cella della mappa nella
-//! riga `y` e nella colonna `x`.
+//! @brief Recupera la cella sulla mappa in riga `y` e colonna `x`.
+//! @return Il puntatore alla cella sulla mappa.
 char *map_at(Map map, size_t x, size_t y);
 
 //! @brief Libera la memoria occupata dalla mappa.

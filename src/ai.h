@@ -11,8 +11,8 @@
 //! @param source Giocatore da cui cominciare la ricerca.
 //! @param map Mappa su cui effettuare la ricerca.
 //! @param path Buffer ausiliare lungo `map.rows * map.columns` per i nodi visitati.
-//! @param best_path Buffer ausiliare su cui ci sono i nodi visitati del percorso migliore.
-//! @param best_score Score percorso migliore (inizialmente `LONG_MIN`).
+//! @param best_path Buffer ausiliare contenente i nodi visitati del percorso migliore.
+//! @param best_score Score del percorso migliore (inizialmente `LONG_MIN`).
 long ai_find(Player source, Map map, long *path, long *best_path, long *best_score);
 
 #endif

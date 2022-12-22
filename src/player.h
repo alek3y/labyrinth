@@ -46,7 +46,6 @@ typedef struct {
 } Player;
 
 //! @brief Genera il giocatore e rimuove il simbolo corrispondente dalla mappa.
-//! @return Il giocatore con posizione corrispondente a quella sulla mappa.
 void player_retrieve(Player *player, Map map);
 
 //! @brief Controlla se può muoversi, lo sposta e aggiorna il suo punteggio.

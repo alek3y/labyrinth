@@ -5,7 +5,7 @@
 #define UTIL_H
 
 //! @brief Stampa la stringa da `offset` secondo `format` pulendo il resto della riga.
-//! @return Il numero di byte stampati con `format` a video.
+//! @return Il numero di byte stampati con `format` a schermo.
 int printf_clean(unsigned int offset, char *format, ...);
 
 #endif
