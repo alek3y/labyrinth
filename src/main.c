@@ -52,13 +52,30 @@ int mode_ai(Player player, Map map);
 //! @brief Entry del programma con l'inizializzazione della mappa.
 int main(int argc, char **argv) {
 	char *map_file = NULL;
-	bool ai_mode = false;
-	for (int i = 1; i < argc; i++) {
-		if (strcmp(argv[i], "--challenge") == 0) {
-			ai_mode = true;
-		} else {
-			map_file = argv[i];
+	if (argc > 1) {
+		map_file = argv[1];
+	}
+
+	int game_choice;
+	do {
+		printf(
+			"== Modalità ==\n"
+			" 1. Giocatore\n"
+			" 2. AI\n"
+			" 0. Esci\n"
+			": "
+		);
+		scanf("%d", &game_choice);
+
+		// Pulisci il prompt e il menù
+		for (size_t i = 0; i < 5; i++) {
+			term_cursor_move(-1, 0);
+			printf_clean(0, "");
 		}
+	} while (game_choice < 0 || game_choice > 2);
+
+	if (game_choice == 0) {
+		return 0;
 	}
 
 	Map map = {
@@ -86,23 +103,27 @@ int main(int argc, char **argv) {
 
 		map_from_file(&map, file);
 		fclose(file);
-	} else if (ai_mode) {
+	} else {
 		size_t columns, rows;
 		scanf("%lu\n%lu\n", &columns, &rows);
 		map_from_stdin(&map, columns, rows);
-	} else {
-		map_from_str(&map, DEFAULT_LEVEL);
+
+		// Pulisci le righe della mappa in input
+		for (size_t i = 0; i < map.rows + 2; i++) {
+			term_cursor_move(-1, 0);
+			printf_clean(0, "");
+		}
 	}
 
 	player_retrieve(&player, map);
 
 	int status;
-	if (!ai_mode) {
+	if (game_choice == 1) {
 		Tail tail = tail_new();
 		player.tail = &tail;
 		status = mode_interactive(player, map);
 		tail_free(&tail);
-	} else {
+	} else if (game_choice == 2) {
 		status = mode_ai(player, map);
 	}
 
