@@ -8,11 +8,12 @@
 #include "map.h"
 
 //! @brief Lista dinamica che rappresenta la coda del giocatore.
-typedef struct Tail {
+struct Tail {
 	long x, y;
 	size_t length;
 	struct Tail *next;
-} Tail;
+};
+typedef struct Tail Tail;
 
 //! @brief Inizializza la struttura vuota.
 Tail tail_new();

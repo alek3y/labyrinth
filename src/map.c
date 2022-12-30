@@ -36,7 +36,6 @@ void map_from_str(Map *map, char *level) {
 	}
 }
 
-
 //! @details La funzione comincia la lettura del file dal punto
 //! in cui si trova il cursore e non dall'inizio del file.
 //! Utilizza lo stesso standard di lettura di `map_from_str`.
