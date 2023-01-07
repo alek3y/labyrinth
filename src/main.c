@@ -104,12 +104,13 @@ int main(int argc, char **argv) {
 		map_from_file(&map, file);
 		fclose(file);
 	} else {
+		printf("Inserisci la mappa:\n");
 		size_t columns, rows;
 		scanf("%lu\n%lu\n", &columns, &rows);
 		map_from_stdin(&map, columns, rows);
 
 		// Pulisci le righe della mappa in input
-		for (size_t i = 0; i < map.rows + 2; i++) {
+		for (size_t i = 0; i < map.rows + 3; i++) {
 			term_cursor_move(-1, 0);
 			printf_clean(0, "");
 		}
